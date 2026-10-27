@@ -321,14 +321,14 @@ function parseCSV(t){var rows=[],r=[],f="",q=false,i,c;
   if(f!==""||r.length){r.push(f);rows.push(r)}
   return {h:rows[0]||[],r:rows.slice(1).filter(function(x){return x.some(function(y){return y!==""})})}}
 function fetchT(url,ms){return new Promise(function(res,rej){var done=false,t=setTimeout(function(){if(!done){done=true;rej(new Error("timeout"))}},ms);
-  fetch(url).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.text()}).then(function(x){if(!done){done=true;clearTimeout(t);res(x)}}).catch(function(e){if(!done){done=true;clearTimeout(t);rej(e)}})})}
+  fetch(url,/^https?:/.test(url)?undefined:{cache:"no-cache"}).then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.text()}).then(function(x){if(!done){done=true;clearTimeout(t);res(x)}}).catch(function(e){if(!done){done=true;clearTimeout(t);rej(e)}})})}
 function loadSheet(){
   var base="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:csv&headers=1&sheet=";
   var names=TABLES.concat(OPT);
   return Promise.all(names.map(function(n){return fetchT(base+n,9000).then(function(t){
       if(/^\s*</.test(t))throw new Error("not csv");return parseCSV(t)}).catch(function(e){if(OPT.indexOf(n)>=0)return null;throw e})
   })).then(function(a){var o={};names.forEach(function(n,i){if(a[i])o[n]=a[i]});o._src="sheet";return o})}
-function loadLocal(){return fetchT("data.json",15000).then(function(t){var o=JSON.parse(t);o._src="local";return o})}
+function loadLocal(){return fetchT("data.json?v=20261027c",15000).then(function(t){var o=JSON.parse(t);o._src="local";return o})}
 
 var D={};
 function objs(T){if(!T)return[];return T.r.map(function(r){var o={};T.h.forEach(function(h,i){o[h]=r[i]==null?"":r[i]});return o})}
@@ -426,7 +426,7 @@ var figCache={};
 function fillFigs(){$$("[data-fig]").forEach(function(el){var id=el.getAttribute("data-fig"),f=D.figFile[id];if(!f)return;
   var put=function(t){if(t&&/<svg/.test(t))el.innerHTML=t};
   if(figCache[id])return put(figCache[id]);
-  fetchT("hinh/"+encodeURIComponent(f),8000).then(function(t){figCache[id]=t;put(t)}).catch(function(){})})}
+  fetchT("hinh/"+encodeURIComponent(f)+"?v=20261027c",8000).then(function(t){figCache[id]=t;put(t)}).catch(function(){})})}
 function bodyHtml(blocks){
   var h="",i=0;
   while(i<blocks.length){var k=blocks[i];
