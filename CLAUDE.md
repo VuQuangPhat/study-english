@@ -5,7 +5,9 @@ Trang tĩnh (GitHub Pages): `index.html` + `data.json` (bản dự phòng) + `hi
 ## Trước khi giao bất kỳ thay đổi nào
 1. Chạy `python3 tools/audit.py 390,768,1366,1905,2560` (cần Playwright). Phải ra `issues: 0`. Không để người dùng tự phát hiện lỗi hiển thị.
 2. Xem ảnh chụp ít nhất một trang có sơ đồ ở 390px và ở màn rộng (1905px trở lên).
-3. Cập nhật đồng thời Sheet và `data.json` (bản dự phòng phải khớp Sheet).
+3. Sửa CSS toàn cục (cỡ chữ, đơn vị, bố cục) thì chạy lại audit cho TOÀN BỘ trang và sơ đồ, kể cả cỡ rất rộng (6400px mô phỏng trình duyệt thu nhỏ) và 390px.
+4. Khi người dùng gửi ảnh lỗi: đọc mức thu phóng, độ phân giải, bản cũ hay mới trước khi sửa.
+5. Cập nhật đồng thời Sheet và `data.json` (bản dự phòng phải khớp Sheet).
 
 ## Bài học đã trả giá
 - **Chữ trong SVG phải có cỡ cố định bằng px.** Chữ SVG không có `font-size` sẽ kế thừa cỡ chữ trang. Cỡ trang tăng theo màn hình thì chữ phình còn ô giữ nguyên nên tràn. Đã đặt `.fig svg{font-size:17px}`; khi vẽ sơ đồ mới phải đo độ vừa của chữ trong ô (audit làm việc này).
